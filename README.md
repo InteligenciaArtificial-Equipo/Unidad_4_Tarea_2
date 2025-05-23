@@ -1,6 +1,6 @@
 ## Unidad 4 - Tarea 1
 
-## Preprocesamiento para un detector de emociones con Fer - 2013
+## Preprocesamiento para un detector de emociones con Fer - 2013 con el modelo CNN
 
 ## Integrantes
 
