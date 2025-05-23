@@ -9,9 +9,6 @@
 
 ## Como Funciona?
 
-## Preprocess.py
-Código para llevar a cabo el preprocesamiento de imágenes para nuestro modelo CNN.
-
 ## Imports
 Tenemos los siguientes **imports**, a la hora de ejecutar el programa:
 
@@ -48,7 +45,17 @@ Es un módulo de Python para trabajar con rutas de archivos y directorios de for
 ```py
 import random
 ```
-Es una biblioteca para generar aleatoriedad. Sirve para mezclar las imágenes aleatoriamente antes de dividirlas en entrenamiento, prueba y validación, asegurando una distribución justa.
+Es una Librería para generar aleatoriedad. Sirve para mezclar las imágenes aleatoriamente antes de dividirlas en entrenamiento, prueba y validación, asegurando una distribución justa.
+
+- ### Matplotlib
+
+```py
+import matplotlib.pyplot as pl
+```
+Es una Librería de visualización que permite generar gráficos de alta calidad, como líneas, barras, histogramas, imágenes, y más.
+
+## Preprocess.py
+Código para llevar a cabo el preprocesamiento de imágenes para nuestro modelo CNN.
 
 - ### Ruta base del dataset
   
