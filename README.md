@@ -204,7 +204,7 @@ Prepara una ventana en la pantalla con cinco secciones (paneles) para mostrar di
 
     axes[2].imshow(img, cmap='gray')
     if corners.size:
-        if corners.ndim == 1:  # Caso de una sola esquina
+        if corners.ndim == 1: 
             corners = corners.reshape(1, -1)
         for corner in corners:
             x, y = corner
