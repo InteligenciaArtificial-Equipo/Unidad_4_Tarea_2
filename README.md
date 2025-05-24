@@ -108,7 +108,8 @@ for split in ["train", "test"]:
 Busca todas las imágenes en las carpetas train y test del dataset, que están organizadas por emociones (como "happy", "sad", etc.).
 
 - ### Mezcla y División
-  ```py
+
+```py
 random.shuffle(all_images)
 
 total_images = len(all_images)
@@ -119,11 +120,13 @@ train_images = all_images[:train_end]
 test_images = all_images[train_end:test_end]
 val_images = all_images[test_end:]
 ```
+
 Mezcla aleatoriamente todas las imágenes para que no estén en un orden predecible y las divide en tres partes: 70% para entrenamiento (para enseñar a la red neuronal), 20% para prueba (para verificar cómo aprende), y 10% para validación (para ajustar y evaluar el modelo).
 
 - ### Guardado y Finalización
 
-  ```py
+```py
+
 for img_path, label in train_images:
     preprocess_image(img_path, label, "train")
 for img_path, label in test_images:
@@ -133,4 +136,5 @@ for img_path, label in val_images:
 
 print("Preprocesamiento completado con división: 70% train, 20% test, 10% val.")
 ```
+
 Aplica el procesamiento a cada imagen y las guarda en subcarpetas dentro de preprocessed_data (como train/happy, test/sad, etc.).
