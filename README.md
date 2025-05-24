@@ -113,8 +113,8 @@ Busca todas las imágenes en las carpetas train y test del dataset, que están o
 random.shuffle(all_images)
 
 total_images = len(all_images)
-train_end = int(0.7 * total_images)  # 70% para entrenamiento
-test_end = int(0.9 * total_images)   # 20% para prueba (70% + 20% = 90%), 10% para validación
+train_end = int(0.7 * total_images)  
+test_end = int(0.9 * total_images)   
 
 train_images = all_images[:train_end]
 test_images = all_images[train_end:test_end]
