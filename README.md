@@ -1,6 +1,6 @@
 ## Unidad 4 - Tarea 1
 
-## Preprocesamiento para un detector de emociones con Fer - 2013 con el modelo CNN
+## Preprocesamiento para un detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
 
 ## Integrantes
 
@@ -62,5 +62,43 @@ Código para llevar a cabo el preprocesamiento de imágenes para nuestro modelo 
 ```py
 dataset_path = Path("Fer2013_Dataset")
 output_path = Path("preprocessed_data")
+
+output_path.mkdir(exist_ok=True)
 ```
-Recibe una lista de listas (matriz) que inicializarán como el estado inicial.
+Implementamos el dataset Fer2013 para preprocesarlas para el entrenamiento de nuestra CNN.
+
+- ### Función para el preprocesamiento
+```py
+def preprocess_image(image_path, label, split):
+    # Leer imagen en escala de grises
+    img = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        return None
+
+    # 1. Extracción de características básicas (normalización)
+    img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+
+    # 2. Detector de bordes (Canny)
+    edges = cv2.Canny(img, 100, 200)
+
+    # 3. Detector de blobs (Difference of Gaussian)
+    blobs = blob_dog(img, max_sigma=30, threshold=.1)
+    blobs = blobs[:, 2] if blobs.size else np.array([])  # Manejo de caso vacío
+
+    # 4. Detector de esquinas (Shi-Tomasi)
+    corners = cv2.goodFeaturesToTrack(img, maxCorners=100, qualityLevel=0.01, minDistance=10)
+    corners = corners.squeeze() if corners is not None else np.array([])
+
+    # Redimensionar a 48x48
+    img_resized = cv2.resize(img, (48, 48))
+    edges_resized = cv2.resize(edges, (48, 48))
+
+    # Convertir a 3 canales para compatibilidad con OpenCV 
+    processed_img = cv2.merge([img_resized, img_resized, img_resized])  # RGB from grayscale
+
+    # Guardar la imagen procesada
+    output_dir = output_path / split / label
+    output_dir.mkdir(parents=True, exist_ok=True)  
+    cv2.imwrite(str(output_dir / image_path.name), processed_img)
+```
+Función para el preprocesamiento de imágenes del dataset fer2013 (Extracción de características, Detector de bordes, Detector de blobs y Detector de esquinas), además de redimensionar y convertir a 3 canales para el modelo CNN.
