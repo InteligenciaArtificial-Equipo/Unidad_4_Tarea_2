@@ -75,28 +75,21 @@ def preprocess_image(image_path, label, split):
     if img is None:
         return None
 
-    # 1. Extracción de características básicas (normalización)
     img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
 
-    # 2. Detector de bordes (Canny)
     edges = cv2.Canny(img, 100, 200)
 
-    # 3. Detector de blobs (Difference of Gaussian)
     blobs = blob_dog(img, max_sigma=30, threshold=.1)
-    blobs = blobs[:, 2] if blobs.size else np.array([])  # Manejo de caso vacío
+    blobs = blobs[:, 2] if blobs.size else np.array([])  
 
-    # 4. Detector de esquinas (Shi-Tomasi)
     corners = cv2.goodFeaturesToTrack(img, maxCorners=100, qualityLevel=0.01, minDistance=10)
     corners = corners.squeeze() if corners is not None else np.array([])
 
-    # Redimensionar a 48x48
     img_resized = cv2.resize(img, (48, 48))
     edges_resized = cv2.resize(edges, (48, 48))
 
-    # Convertir a 3 canales para compatibilidad con OpenCV 
-    processed_img = cv2.merge([img_resized, img_resized, img_resized])  # RGB from grayscale
+    processed_img = cv2.merge([img_resized, img_resized, img_resized])  
 
-    # Guardar la imagen procesada
     output_dir = output_path / split / label
     output_dir.mkdir(parents=True, exist_ok=True)  
     cv2.imwrite(str(output_dir / image_path.name), processed_img)
