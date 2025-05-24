@@ -181,7 +181,6 @@ Crea una función que toma cada imagen, la ajusta (como cambiar su tamaño o mej
 
 ```py
     fig, axes = plt.subplots(1, 5, figsize=(20, 4))
-
     fig.suptitle(f"Preprocesamiento de {label.capitalize()}", fontsize=16, y=1.1) 
 ```
 Prepara una ventana en la pantalla con cinco secciones (paneles) para mostrar diferentes versiones de la imagen procesada, y pone un título en la parte superior que indica la emoción de la cara.
@@ -246,3 +245,35 @@ for label in ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
 print("Visualización completada.")
 ```
 Cuando termina de mostrar todas las imágenes seleccionadas, imprime un mensaje para confirmar que el proceso ha concluido.
+
+## Ejecución
+
+- ### Angry
+  
+![Image](https://github.com/user-attachments/assets/786068db-5f04-412c-9dda-1788713bb1d1)
+
+- ### Disgust
+
+![Image](https://github.com/user-attachments/assets/9aaa54d7-eb80-498d-a47d-8f5aa1ffe614)
+
+- ### Fear
+
+![image](https://github.com/user-attachments/assets/c49afe62-dd76-40f9-91d0-b902317e743b)
+
+- ### Happy
+  
+![image](https://github.com/user-attachments/assets/b3b49207-c884-4caf-a6f0-699588a4a3db)
+
+- ### Neutral
+
+![image](https://github.com/user-attachments/assets/fa28dca9-669f-473e-a30c-c63f819a2a32)
+
+- ### Sad
+
+![image](https://github.com/user-attachments/assets/b14a8ee8-debe-409a-bcbe-d99de3c75d23)
+
+- ### Surprise
+
+![image](https://github.com/user-attachments/assets/975588fc-62f7-4113-b5b3-9d38f06f5621)
+
+
