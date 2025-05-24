@@ -1,4 +1,4 @@
-## Unidad 4 - Tarea 1
+![image](https://github.com/user-attachments/assets/0fae92dc-88ca-41f4-b299-da770d826e17)## Unidad 4 - Tarea 1
 
 ## Preprocesamiento para un detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
 
@@ -276,4 +276,18 @@ Cuando termina de mostrar todas las imágenes seleccionadas, imprime un mensaje 
 
 ![image](https://github.com/user-attachments/assets/975588fc-62f7-4113-b5b3-9d38f06f5621)
 
+## Seleccionar un modelo
+En este proyecto se utilizara un CNN (Red Neuronal Convolucional) porque puede aprender automáticamente cómo distinguir emociones en imágenes de caras, funciona bien con las imágenes que preparamos, y nos permite usar lo que aprende para detectar emociones en tiempo real con una cámara web.
 
+![image](https://github.com/user-attachments/assets/b5a75c09-43f1-48c0-8510-d8ae6ec9975c)
+
+## Parametros para el modelo CNN
+Utilizaremos el 70% para el entrenamiento, 20% para el testeo y 10% para la evaluación.
+
+![image](https://github.com/user-attachments/assets/1f21a70f-ace2-4da7-89f0-e99208c989e3)
+
+## Evaluación 
+
+Para evaluar se utilizará la matriz de confusión, la cual es una herramienta que nos ayuda a entender cómo está funcionando nuestro modelo CNN al predecir emociones (como "happy", "sad", "angry") con las imágenes del dataset FER 2013.
+
+![image](https://github.com/user-attachments/assets/ab4e373c-b61b-4997-be65-e34ebd87b3f2)
