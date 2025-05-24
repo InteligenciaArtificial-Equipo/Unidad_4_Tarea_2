@@ -158,7 +158,7 @@ Indica dónde están las imágenes, en la carpeta llamada preprocessed_data, esp
   
 ```py
 def visualize_image(image_path, label, max_visualizations=1):
-    # Leer imagen original en escala de grises
+
     img = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
@@ -237,7 +237,7 @@ for label in ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
     label_path = dataset_path / "test" / label
     count = 0
     for img_path in label_path.glob("*.jpg"):
-        if count >= 1:  # Solo una imagen por categoría
+        if count >= 1:  
             break
         print(f"Mostrando visualización para {label}/{img_path.name}")
         visualize_image(img_path, label)
