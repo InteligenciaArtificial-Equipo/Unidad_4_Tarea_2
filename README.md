@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/0fae92dc-88ca-41f4-b299-da770d826e17)## Unidad 4 - Tarea 1
+## Unidad 4 - Tarea 1
 
 ## Preprocesamiento para un detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
 
