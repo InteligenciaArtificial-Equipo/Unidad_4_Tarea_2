@@ -70,7 +70,7 @@ Implementamos el dataset Fer2013 para preprocesarlas para el entrenamiento de nu
 - ### Función para el preprocesamiento
 ```py
 def preprocess_image(image_path, label, split):
-    # Leer imagen en escala de grises
+
     img = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
     if img is None:
         return None
@@ -95,3 +95,42 @@ def preprocess_image(image_path, label, split):
     cv2.imwrite(str(output_dir / image_path.name), processed_img)
 ```
 Función para el preprocesamiento de imágenes del dataset fer2013 (Extracción de características, Detector de bordes, Detector de blobs y Detector de esquinas), además de redimensionar y convertir a 3 canales para el modelo CNN.
+
+- ### Recolectar todas las imágenes
+```py
+all_images = []
+for split in ["train", "test"]:
+    for label in ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]:
+        label_path = dataset_path / split / label
+        for img_path in label_path.glob("*.jpg"):
+            all_images.append((img_path, label))
+```
+Busca todas las imágenes en las carpetas train y test del dataset, que están organizadas por emociones (como "happy", "sad", etc.).
+
+- ### Mezcla y División
+  ```py
+random.shuffle(all_images)
+
+total_images = len(all_images)
+train_end = int(0.7 * total_images)  # 70% para entrenamiento
+test_end = int(0.9 * total_images)   # 20% para prueba (70% + 20% = 90%), 10% para validación
+
+train_images = all_images[:train_end]
+test_images = all_images[train_end:test_end]
+val_images = all_images[test_end:]
+```
+Mezcla aleatoriamente todas las imágenes para que no estén en un orden predecible y las divide en tres partes: 70% para entrenamiento (para enseñar a la red neuronal), 20% para prueba (para verificar cómo aprende), y 10% para validación (para ajustar y evaluar el modelo).
+
+- ### Guardado y Finalización
+
+  ```py
+for img_path, label in train_images:
+    preprocess_image(img_path, label, "train")
+for img_path, label in test_images:
+    preprocess_image(img_path, label, "test")
+for img_path, label in val_images:
+    preprocess_image(img_path, label, "val")
+
+print("Preprocesamiento completado con división: 70% train, 20% test, 10% val.")
+```
+Aplica el procesamiento a cada imagen y las guarda en subcarpetas dentro de preprocessed_data (como train/happy, test/sad, etc.).
