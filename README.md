@@ -279,7 +279,7 @@ Cuando termina de mostrar todas las imágenes seleccionadas, imprime un mensaje 
 ## Seleccionar un modelo
 En este proyecto se utilizara un CNN (Red Neuronal Convolucional) porque puede aprender automáticamente cómo distinguir emociones en imágenes de caras, funciona bien con las imágenes que preparamos, y nos permite usar lo que aprende para detectar emociones en tiempo real con una cámara web.
 
-![image](https://github.com/user-attachments/assets/aa5b6120-4657-4094-8b6b-98dcd3907a23)
+![image](https://github.com/user-attachments/assets/0b80e6ea-1875-4262-8aca-c85ade860a33)
 
 ## Parametros para el modelo CNN
 Utilizaremos el 70% para el entrenamiento, 20% para el testeo y 10% para la evaluación.
