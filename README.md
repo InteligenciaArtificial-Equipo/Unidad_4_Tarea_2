@@ -141,4 +141,5 @@ Aplica el procesamiento a cada imagen y las guarda en subcarpetas dentro de prep
 
 - ### Resultado
 ![Image](https://github.com/user-attachments/assets/0b954a51-eb0a-4ef0-9746-7aba34a5156d)
+
 Nos genera la carpeta preprocessed_data con las imágenes preprocesadas del dataset.
