@@ -1,6 +1,6 @@
-## Unidad 4 - Tarea 1
+## Unidad 4 - Tarea 2
 
-## Preprocesamiento para un detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
+## Detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
 
 ## Integrantes
 
