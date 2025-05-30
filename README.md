@@ -184,4 +184,4 @@ El modelo logra una precisión competitiva en el conjunto de prueba de FER2013. 
 ![image](https://github.com/user-attachments/assets/b647fc6e-77ec-40c1-8830-32460ad3a010)
 
 ### Video Demostrativo 
-[Video](https://www.youtube.com/watch?v=uOcDHrsHIs4&t=109s)
+[Detector De Emociones Con CNN](https://www.youtube.com/watch?v=uOcDHrsHIs4&t=109s)
