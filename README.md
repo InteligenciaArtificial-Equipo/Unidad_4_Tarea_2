@@ -1,293 +1,188 @@
-## Unidad 4 - Tarea 2
+# Sistema de Reconocimiento de Expresiones Faciales
 
-## Detector de emociones con fer2013 con el modelo CNN (Red Neuronal Convolucional)
+## Descripción General
+Este proyecto implementa un sistema de reconocimiento de expresiones faciales en tiempo real utilizando aprendizaje profundo. Está entrenado con el dataset FER2013 y puede detectar siete emociones básicas: enojo, disgusto, miedo, felicidad, tristeza, sorpresa y neutral.
 
-## Integrantes
+## Características
+- Detección de expresiones faciales en tiempo real usando webcam
+- Modelo CNN pre-entrenado para clasificación de emociones
+- Preprocesamiento y aumento de datos
+- Pipeline de entrenamiento y evaluación del modelo
+- Visualización de extracción de características
 
-### Chaparro Castillo Christopher
-### Peñuelas López Luis Antonio
-
-## Como Funciona?
-
-## Imports
-Tenemos los siguientes **imports**, a la hora de ejecutar el programa:
-
-- ### Cv2
-  
-```py
-import cv2
+## Estructura del Proyecto
 ```
-Librería para procesar imágenes y videos. Se usa para leer imágenes (como cv2.imread()), detectar bordes (cv2.Canny()), redimensionarlas (cv2.resize()).
-
-- ### Numpy
-
-```py
-import numpy as np
-```
-Librería para cálculos numéricos con arreglos. Sirve para manejar imágenes como matrices y realizar operaciones como normalizar o cambiar la forma de los datos.
-
-- ### Blob_dog
-
-```py
-from skimage.feature import blob_dog
-```
-Parte de Scikit-Image, esta función detecta regiones circulares (blobs) en imágenes usando el método Difference of Gaussian. Se emplea para identificar características como ojos o boca en las caras.
-
-- ### Path
-
-```py
-from pathlib import Path
-```
-Es un módulo de Python para trabajar con rutas de archivos y directorios de forma sencilla. Se usa para crear carpetas (como preprocessed_data) y buscar imágenes (Path.glob("*.jpg")).
-
-- ### Random
-
-```py
-import random
-```
-Es una Librería para generar aleatoriedad. Sirve para mezclar las imágenes aleatoriamente antes de dividirlas en entrenamiento, prueba y validación, asegurando una distribución justa.
-
-- ### Matplotlib
-
-```py
-import matplotlib.pyplot as pl
-```
-Es una Librería de visualización que permite generar gráficos de alta calidad, como líneas, barras, histogramas, imágenes, y más.
-
-## Preprocess.py
-Código para llevar a cabo el preprocesamiento de imágenes para nuestro modelo CNN.
-
-- ### Ruta base del dataset
-  
-```py
-dataset_path = Path("Fer2013_Dataset")
-output_path = Path("preprocessed_data")
-
-output_path.mkdir(exist_ok=True)
-```
-Implementamos el dataset Fer2013 para preprocesarlas para el entrenamiento de nuestra CNN.
-
-- ### Función para el preprocesamiento
-```py
-def preprocess_image(image_path, label, split):
-
-    img = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        return None
-
-    img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-
-    edges = cv2.Canny(img, 100, 200)
-
-    blobs = blob_dog(img, max_sigma=30, threshold=.1)
-    blobs = blobs[:, 2] if blobs.size else np.array([])  
-
-    corners = cv2.goodFeaturesToTrack(img, maxCorners=100, qualityLevel=0.01, minDistance=10)
-    corners = corners.squeeze() if corners is not None else np.array([])
-
-    img_resized = cv2.resize(img, (48, 48))
-    edges_resized = cv2.resize(edges, (48, 48))
-
-    processed_img = cv2.merge([img_resized, img_resized, img_resized])  
-
-    output_dir = output_path / split / label
-    output_dir.mkdir(parents=True, exist_ok=True)  
-    cv2.imwrite(str(output_dir / image_path.name), processed_img)
-```
-Función para el preprocesamiento de imágenes del dataset fer2013 (Extracción de características, Detector de bordes, Detector de blobs y Detector de esquinas), además de redimensionar y convertir a 3 canales para el modelo CNN.
-
-- ### Recolectar todas las imágenes
-```py
-all_images = []
-for split in ["train", "test"]:
-    for label in ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]:
-        label_path = dataset_path / split / label
-        for img_path in label_path.glob("*.jpg"):
-            all_images.append((img_path, label))
-```
-Busca todas las imágenes en las carpetas train y test del dataset, que están organizadas por emociones (como "happy", "sad", etc.).
-
-- ### Mezcla y División
-
-```py
-random.shuffle(all_images)
-
-total_images = len(all_images)
-train_end = int(0.7 * total_images)  
-test_end = int(0.9 * total_images)   
-
-train_images = all_images[:train_end]
-test_images = all_images[train_end:test_end]
-val_images = all_images[test_end:]
+.
+├── main.py                 # Script principal de ejecución
+├── preprocessing.py        # Utilidades de preprocesamiento de datos
+├── model_training.py       # Entrenamiento y evaluación del modelo CNN
+├── realtime_detector.py    # Detección de emociones en tiempo real
+├── haarcascade_frontalface_default.xml  # Cascada de detección facial
+├── models/                 # Directorio para modelos guardados
+├── preprocessed_data/      # Almacenamiento de datos procesados
+└── Fer2013_Dataset/       # Directorio del dataset original
 ```
 
-Mezcla aleatoriamente todas las imágenes para que no estén en un orden predecible y las divide en tres partes: 70% para entrenamiento (para enseñar a la red neuronal), 20% para prueba (para verificar cómo aprende), y 10% para validación (para ajustar y evaluar el modelo).
+## Requisitos
+- Python 3.x
+- OpenCV
+- TensorFlow/Keras
+- NumPy
+- Matplotlib
+- scikit-learn
 
-- ### Guardado y Finalización
-
-```py
-
-for img_path, label in train_images:
-    preprocess_image(img_path, label, "train")
-for img_path, label in test_images:
-    preprocess_image(img_path, label, "test")
-for img_path, label in val_images:
-    preprocess_image(img_path, label, "val")
-
-print("Preprocesamiento completado con división: 70% train, 20% test, 10% val.")
+## Instalación
+1. Clonar el repositorio:
+```bash
+git clone git@github.com:InteligenciaArtificial-Equipo/Unidad_4_Tarea_2.git
+cd Unidad_4_Tarea_2
 ```
 
-Aplica el procesamiento a cada imagen y las guarda en subcarpetas dentro de preprocessed_data (como train/happy, test/sad, etc.).
-
-- ### Resultado
-![Image](https://github.com/user-attachments/assets/0b954a51-eb0a-4ef0-9746-7aba34a5156d)
-
-Nos genera la carpeta preprocessed_data con las imágenes preprocesadas del dataset.
-
-## Visualize.py
-Código para visualizar las imágenes preprocesadas del dataset (Con motivo de verificación).
-
-- ### Definición de Rutas
-  
-```py
-dataset_path = Path("preprocessed_data")
+2. Instalar paquetes requeridos:
+```bash
+pip install -r requirements.txt
 ```
-Indica dónde están las imágenes, en la carpeta llamada preprocessed_data, específicamente en la sección test, que contiene ejemplos para verificar el modelo.
 
-- ### Función para Visualizar
-  
-```py
-def visualize_image(image_path, label, max_visualizations=1):
+3. **Importante**: El dataset FER2013 no está incluido en este repositorio debido a su tamaño y licencia. Para obtenerlo:
+   - Visita la página oficial del [FER2013 Dataset](https://www.kaggle.com/datasets/msambare/fer2013)
+   - Descarga el dataset desde Kaggle
+   - Coloca el archivo `fer2013.csv` en el directorio `Fer2013_Dataset/`
 
-    img = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        return None
+> **Nota**: El dataset FER2013 es necesario para el entrenamiento del modelo. Sin él, el sistema no podrá funcionar correctamente.
 
-    img = cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-
-    edges = cv2.Canny(img, 100, 200)
-
-    blobs = blob_dog(img, max_sigma=30, threshold=.1)
-    blobs = blobs if blobs.size else np.array([])
-
-    corners = cv2.goodFeaturesToTrack(img, maxCorners=100, qualityLevel=0.01, minDistance=10)
-    corners = corners.squeeze() if corners is not None else np.array([])
-
-    img_resized = cv2.resize(img, (48, 48))
+## Uso
+1. Ejecutar el script principal:
+```bash
+python main.py
 ```
-Crea una función que toma cada imagen, la ajusta (como cambiar su tamaño o mejorar su claridad), y detecta detalles como bordes, áreas redondeadas (como ojos), y puntos importantes (como esquinas).
 
-- ### Creación y Configuración de la Visualización
+El script realizará:
+1. Preprocesamiento del dataset FER2013
+2. Entrenamiento del modelo CNN
+3. Inicio del detector de emociones en tiempo real
 
-```py
-    fig, axes = plt.subplots(1, 5, figsize=(20, 4))
-    fig.suptitle(f"Preprocesamiento de {label.capitalize()}", fontsize=16, y=1.1) 
-```
-Prepara una ventana en la pantalla con cinco secciones (paneles) para mostrar diferentes versiones de la imagen procesada, y pone un título en la parte superior que indica la emoción de la cara.
+## Funcionamiento del Script Principal
+El archivo `main.py` es el script principal que orquesta todo el flujo del proyecto. Su funcionamiento se divide en tres etapas principales:
 
-- ### Mostrar los Resultados
+### 1. Preprocesamiento de Datos
+- Carga el dataset FER2013 desde el archivo CSV
+- Divide los datos en conjuntos de entrenamiento, prueba y validación
+- Realiza el preprocesamiento necesario de las imágenes
+- Visualiza un ejemplo de extracción de características para verificación
 
-```py
-    axes[0].imshow(img, cmap='gray')
-    axes[0].set_title(f"Original - {label.capitalize()}")
-    axes[0].axis('off')
+### 2. Entrenamiento y Evaluación
+- Entrena el modelo CNN con los datos procesados
+- Evalúa el rendimiento del modelo en el conjunto de prueba
+- Genera y muestra gráficas de precisión y pérdida
+- Crea la matriz de confusión
+- Guarda el modelo entrenado en el directorio `models/`
 
-    axes[1].imshow(img, cmap='gray')
-    if blobs.size:
-        for blob in blobs:
-            y, x, r = blob
-            circle = plt.Circle((x, y), r, color='red', fill=False)
-            axes[1].add_patch(circle)
-    axes[1].set_title(f"Blobs (Red) - {label.capitalize()}")
-    axes[1].axis('off')
+### 3. Detección en Tiempo Real
+- Carga el modelo entrenado
+- Inicia la captura de video desde la webcam
+- Detecta rostros en tiempo real
+- Clasifica las expresiones faciales
+- Muestra los resultados en una ventana con las etiquetas de emociones
 
-    axes[2].imshow(img, cmap='gray')
-    if corners.size:
-        if corners.ndim == 1: 
-            corners = corners.reshape(1, -1)
-        for corner in corners:
-            x, y = corner
-            axes[2].plot(x, y, 'b.')
-    axes[2].set_title(f"Corners (Blue) - {label.capitalize()}")
-    axes[2].axis('off')
+Cada etapa muestra mensajes informativos en la consola para seguir el progreso del proceso.
 
-    axes[3].imshow(edges, cmap='gray')
-    axes[3].set_title(f"Edges (Canny) - {label.capitalize()}")
-    axes[3].axis('off')
+## Arquitectura del Modelo
+El sistema utiliza una Red Neuronal Convolucional (CNN) con la siguiente arquitectura:
 
-    axes[4].imshow(img_resized, cmap='gray')
-    axes[4].set_title(f"Resized (48x48) - {label.capitalize()}")
-    axes[4].axis('off')
-```
-Muestra la imagen original, los bordes detectados, las áreas redondeadas, los puntos clave, y la imagen ajustada a un tamaño fijo, todo en los cinco paneles para que puedas compararlos.
+### Capas de la Red
+1. **Primer Bloque Convolucional**
+   - Conv2D (32 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - Conv2D (32 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - MaxPooling2D (2x2)
+   - Dropout (0.25)
 
-- ### Revisión de Imágenes
+2. **Segundo Bloque Convolucional**
+   - Conv2D (64 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - Conv2D (64 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - MaxPooling2D (2x2)
+   - Dropout (0.25)
 
-```py
-    plt.tight_layout()
-    plt.show()
-```
-Busca una imagen de cada emoción (como "happy", "sad", etc.) en la carpeta test, procesa solo una por categoría, y la muestra en la ventana con un mensaje que indica qué imagen se está viendo.
+3. **Tercer Bloque Convolucional**
+   - Conv2D (128 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - Conv2D (128 filtros, 3x3) + ReLU
+   - BatchNormalization
+   - MaxPooling2D (2x2)
+   - Dropout (0.25)
 
-- ### Finalización
+4. **Capas Densas**
+   - Flatten
+   - Dense (256 unidades) + ReLU
+   - BatchNormalization
+   - Dropout (0.5)
+   - Dense (7 unidades) + Softmax
 
-```py
-for label in ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]:
-    label_path = dataset_path / "test" / label
-    count = 0
-    for img_path in label_path.glob("*.jpg"):
-        if count >= 1:  
-            break
-        print(f"Mostrando visualización para {label}/{img_path.name}")
-        visualize_image(img_path, label)
-        count += 1
+### Características del Modelo
+- **Entrada**: Imágenes en escala de grises de 48x48 píxeles
+- **Optimizador**: Adam con learning rate inicial de 0.001
+- **Función de Pérdida**: Categorical Crossentropy
+- **Métrica**: Accuracy
+- **Regularización**: Dropout y BatchNormalization
+- **Callbacks**: Early Stopping y ReduceLROnPlateau
 
-print("Visualización completada.")
-```
-Cuando termina de mostrar todas las imágenes seleccionadas, imprime un mensaje para confirmar que el proceso ha concluido.
+### Hiperparámetros de Entrenamiento
+- **Batch Size**: 64
+- **Épocas**: 50 (con early stopping)
+- **Learning Rate**: Reducción automática cuando la pérdida de validación se estanca
 
-## Ejecución
+## Detector en Tiempo Real
+El archivo `realtime_detector.py` implementa la funcionalidad de detección de emociones en tiempo real. Sus características principales son:
 
-- ### Angry
-  
-![Image](https://github.com/user-attachments/assets/786068db-5f04-412c-9dda-1788713bb1d1)
+### Componentes Principales
+- **Detección Facial**: Utiliza el clasificador Haar Cascade de OpenCV para detectar rostros en el video
+- **Preprocesamiento**: Convierte cada rostro detectado a escala de grises y lo redimensiona a 48x48 píxeles
+- **Clasificación**: Utiliza el modelo CNN entrenado para predecir la emoción
+- **Visualización**: Muestra el video en tiempo real con rectángulos alrededor de los rostros y etiquetas de emociones
 
-- ### Disgust
+### Funcionalidades
+- Captura de video en tiempo real desde la webcam
+- Detección múltiple de rostros en cada frame
+- Visualización de la emoción detectada y su nivel de confianza
+- Interfaz gráfica con OpenCV
+- Control de salida con la tecla 'q'
 
-![Image](https://github.com/user-attachments/assets/9aaa54d7-eb80-498d-a47d-8f5aa1ffe614)
+### Proceso de Detección
+1. Captura de frame desde la webcam
+2. Conversión a escala de grises
+3. Detección de rostros usando Haar Cascade
+4. Para cada rostro detectado:
+   - Redimensionamiento a 48x48 píxeles
+   - Normalización de valores (0-1)
+   - Predicción de emoción usando el modelo CNN
+   - Visualización de resultados
 
-- ### Fear
+### Manejo de Errores
+- Verificación de carga exitosa del modelo
+- Comprobación de disponibilidad de la webcam
+- Validación del clasificador Haar Cascade
+- Manejo de errores en la captura de frames
 
-![image](https://github.com/user-attachments/assets/c49afe62-dd76-40f9-91d0-b902317e743b)
+## Rendimiento
+El modelo logra una precisión competitiva en el conjunto de prueba de FER2013. La detección en tiempo real está optimizada para un rendimiento fluido en hardware estándar.
 
-- ### Happy
-  
-![image](https://github.com/user-attachments/assets/b3b49207-c884-4caf-a6f0-699588a4a3db)
+## Ejemplos de Ejecución
 
-- ### Neutral
+### Detección en Tiempo Real
+![Detección en Tiempo Real](docs/images/realtime_detection.png)
+*Ejemplo de detección de emociones en tiempo real usando la webcam*
 
-![image](https://github.com/user-attachments/assets/fa28dca9-669f-473e-a30c-c63f819a2a32)
+### Visualización de Características
+![Visualización de Características](docs/images/feature_visualization.png)
+*Visualización de las características extraídas por el modelo*
 
-- ### Sad
+### Resultados del Entrenamiento
+![Resultados del Entrenamiento](docs/images/training_results.png)
+*Grafía de precisión y pérdida durante el entrenamiento*
 
-![image](https://github.com/user-attachments/assets/b14a8ee8-debe-409a-bcbe-d99de3c75d23)
-
-- ### Surprise
-
-![image](https://github.com/user-attachments/assets/975588fc-62f7-4113-b5b3-9d38f06f5621)
-
-## Seleccionar un modelo
-En este proyecto se utilizara un CNN (Red Neuronal Convolucional) porque puede aprender automáticamente cómo distinguir emociones en imágenes de caras, funciona bien con las imágenes que preparamos, y nos permite usar lo que aprende para detectar emociones en tiempo real con una cámara web.
-
-![image](https://github.com/user-attachments/assets/0b80e6ea-1875-4262-8aca-c85ade860a33)
-
-## Parametros para el modelo CNN
-Utilizaremos el 70% para el entrenamiento, 20% para el testeo y 10% para la evaluación.
-
-![image](https://github.com/user-attachments/assets/1f21a70f-ace2-4da7-89f0-e99208c989e3)
-
-## Evaluación 
-
-Para evaluar se utilizará la matriz de confusión, la cual es una herramienta que nos ayuda a entender cómo está funcionando nuestro modelo CNN al predecir emociones (como "happy", "sad", "angry") con las imágenes del dataset FER 2013.
-
-![image](https://github.com/user-attachments/assets/ab4e373c-b61b-4997-be65-e34ebd87b3f2)
+### Matriz de Confusión
+![Matriz de Confusión](docs/images/confusion_matrix.png)
+*Matriz de confusión del modelo en el conjunto de prueba*
