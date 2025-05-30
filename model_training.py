@@ -94,4 +94,3 @@ def train_and_evaluate_model(X_train, y_train, X_val, y_val, X_test, y_test, num
 
 if __name__ == '__main__':
     print("Este script está diseñado para ser importado o ejecutado después de data_preprocessing.py.")
-    print("Por favor, asegúrate de tener los datos de entrenamiento/prueba/validación disponibles.")
