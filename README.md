@@ -172,17 +172,14 @@ El modelo logra una precisión competitiva en el conjunto de prueba de FER2013. 
 ## Ejemplos de Ejecución
 
 ### Detección en Tiempo Real
-![Detección en Tiempo Real](docs/images/realtime_detection.png)
-*Ejemplo de detección de emociones en tiempo real usando la webcam*
+![Screenshot from 2025-05-29 18-10-24](https://github.com/user-attachments/assets/01d5b6c9-86c3-412a-aefc-9f346bc518b8)
+![Screenshot from 2025-05-29 18-10-02](https://github.com/user-attachments/assets/0816524e-e78e-4922-9e42-551910a124dc)
+![Screenshot from 2025-05-29 18-02-26](https://github.com/user-attachments/assets/20e03e05-9f20-43f2-b0cd-850fb06be14c)
 
 ### Visualización de Características
-![Visualización de Características](docs/images/feature_visualization.png)
-*Visualización de las características extraídas por el modelo*
+![Screenshot from 2025-05-29 18-11-17](https://github.com/user-attachments/assets/ec461db6-a509-4e42-a928-cf55aa0e678b)
 
 ### Resultados del Entrenamiento
-![Resultados del Entrenamiento](docs/images/training_results.png)
-*Grafía de precisión y pérdida durante el entrenamiento*
+![image](https://github.com/user-attachments/assets/d149edf9-e266-4098-983f-6c7f32073aa0)
+![image](https://github.com/user-attachments/assets/b647fc6e-77ec-40c1-8830-32460ad3a010)
 
-### Matriz de Confusión
-![Matriz de Confusión](docs/images/confusion_matrix.png)
-*Matriz de confusión del modelo en el conjunto de prueba*
