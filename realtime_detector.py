@@ -67,7 +67,7 @@ def run_realtime_detector(model_path='models/emotion_detector_cnn.keras', emotio
             text = f"{emotion}: {confidence:.2f}%"
             cv2.putText(frame, text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2, cv2.LINE_AA)
 
-        cv2.imshow('Detector de Emociones en Tiempo Real', frame)
+        cv2.imshow('Detector de Emociones', frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
