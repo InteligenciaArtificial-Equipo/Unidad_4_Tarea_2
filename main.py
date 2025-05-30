@@ -1,5 +1,5 @@
 import os
-from data_preprocessing import load_and_preprocess_fer2013, visualize_feature_extraction_example
+from preprocessing import load_and_preprocess_fer2013, visualize_feature_extraction_example
 from model_training import train_and_evaluate_model
 from realtime_detector import run_realtime_detector
 
